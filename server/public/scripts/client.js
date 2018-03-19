@@ -3,7 +3,8 @@ $(document).ready(readyNow);
 function readyNow(){
     console.log('Oh! Hey there!');
     $('#clearButton').on('click', function(){
-        
+        $('#xIn').val('');
+        $('#yIn').val('');
     }); // end clear button on click
     $('#doMathButton').on('click', function(){
         console.log('in doMathButton on click');
@@ -25,6 +26,9 @@ function readyNow(){
         });
         // display answe on DOM
     }); // end doMathButton on click
+
+    // page init
+    getHistory();
 } // end doc ready
 
 function getAnswer(){
@@ -39,3 +43,23 @@ function getAnswer(){
     });// end getAnswer
 } // end getAnswer
 
+function getHistory(){
+    $.ajax({
+        type: "GET",
+        url: '/doMath'
+    }).done(function(response){
+        console.log(response);
+        let outputElement = $('#historyOut');
+        outputElement.empty();
+        for (let i=0; i<response.length; i++) {
+            console.log(response[i]);
+            let outputString = '<li>';
+            outputString += response[i].x + '';
+            outputString += response[i].type +'';
+            outputString += response[i].y+'';
+            outputString += response[i].answer+'';
+            outputString += '</li>';
+            outputElement.append(outputString);
+        }
+    })
+}
